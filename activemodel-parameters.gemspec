@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = ActiveModel::PARAMETERS_VERSION
   spec.authors       = ["Chris Keele"]
   spec.email         = ["dev@chriskeele.com"]
-  spec.description   = %q{Making it easy to transform parameters for model consumption}
-  spec.summary       = %q{Bringing consistency and object orientation to parameter transformation. Works great with active_model_serializers!}
+  spec.description   = %q{Making it easy to transform parameter hashes into model attributes}
+  spec.summary       = %q{Bringing consistency and object orientation to parameter transformation. Compliments active_model_serializers.}
   spec.homepage      = "https://github.com/christhekeele/activemodel-parameters"
   spec.license       = "MIT"
 
@@ -24,6 +24,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rails", ">= 3.2"
-  spec.add_development_dependency "pry"
-
 end

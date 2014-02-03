@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'pry'
+
 platforms :ruby do
   gem 'sqlite3'
 end

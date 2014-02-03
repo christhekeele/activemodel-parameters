@@ -2,12 +2,12 @@ module ActiveModel
   class Parameters < HashWithIndifferentAccess
     module Exceptions
 
-      class ParameterMissing < KeyError
+      class MissingParameters < KeyError
         attr_reader :param # :nodoc:
 
-        def initialize(param) # :nodoc:
-          @param = param
-          super("param not found: #{param}")
+        def initialize(params) # :nodoc:
+          @param = params
+          super("required parameters not found: #{params.join(", ")}")
         end
       end
 

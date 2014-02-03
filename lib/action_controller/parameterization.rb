@@ -32,7 +32,7 @@ module ActionController
     end
 
     def parameters_class
-      self.class._parameters_class || self.class.name.demodulize.sub(/Controller$/, "Parameters").constantize
+      self.class._parameters_class || Parameters.class_for(self.class.name.demodulize.sub(/Controller$/, '').underscore)
     end
   end
 end

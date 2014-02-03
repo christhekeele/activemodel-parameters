@@ -40,6 +40,7 @@ module ActiveModel
     def require!(*keys)
       require *keys
       assert_required!(*to_hash.keys)
+      self
     end
     alias_method :required!, :require!
 
@@ -49,6 +50,19 @@ module ActiveModel
 
     def permit!
       @permitted = true
+      each_pair do |key, value|
+        if value.respond_to? :permit!
+          self[key] = value.permit!
+        elsif value.is_a? Array
+          self[key] = value.map do |elem|
+            if elem.respond_to? :permit!
+              elem.permit!
+            else
+              elem
+            end
+          end
+        end
+      end
       self
     end
 
@@ -136,14 +150,18 @@ module ActiveModel
     end
 
     def permit_attributes(*keys)
-      self.permitted_attributes |= keys
+      self.permitted_attributes |= keys.map(&:to_s)
       self
     end
     alias_method :permit_attribute, :permit_attributes
 
+    def unpermitted_attributes
+      keys - permitted_attributes - ALWAYS_PERMITTED_ATTRIBUTES
+    end
+
     def require_attributes(*keys)
       permit_attributes(*keys)
-      self.required_attributes |= keys
+      self.required_attributes |= keys.map(&:to_s)
       self
     end
     alias_method :require_attribute, :require_attributes
@@ -155,14 +173,10 @@ module ActiveModel
     end
 
     def assert_required!(hash)
-      required_attributes.each do |key|
-        hash[key].presence || raise(Exceptions::ParameterMissing.new(key))
+      missing_attributes = required_attributes.reject do |key|
+        hash[key].presence
       end
-      self
-    end
-
-    def unpermitted_attributes
-      keys - permitted_attributes - ALWAYS_PERMITTED_ATTRIBUTES
+      raise Exceptions::MissingParameters.new(missing_attributes) unless missing_attributes.empty?
     end
 
   end
